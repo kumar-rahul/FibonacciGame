@@ -13,12 +13,12 @@ public class FbGameService {
 	int m,n;
 	ArrayList<CellModel> mergedCells = new ArrayList<CellModel>();
 	
-	public int getRandomRow(){
+	private int getRandomRow(){
 		Random rand = new Random();
 		int mRand  = rand.nextInt(m);
 		return mRand;
 	}
-	public int getRandomCol(){
+	private int getRandomCol(){
 		Random rand = new Random();
 		int nRand  = rand.nextInt(n);
 		return nRand;
@@ -29,7 +29,7 @@ public class FbGameService {
 	public void setColCount(int col){
 		this.n = col;
 	}
-	public void printBoard(List<List<CellModel>> board){
+	private void printBoard(List<List<CellModel>> board){
 		System.out.println("Game Board: ");
 		for(int row=0; row<m; row++){
 			String bStr = "";
@@ -42,7 +42,7 @@ public class FbGameService {
 		}		
 //		System.out.println(Arrays.deepToString(board).replace("], ", "]\n"));
 	}
-	public List<List<CellModel>> createBoard(){
+	private List<List<CellModel>> createBoard(){
 		gboard = new ArrayList<List<CellModel>>();//new int[m][n];		
 		initBoard();
 		for(int cell=0; cell<2; cell++){
@@ -50,11 +50,7 @@ public class FbGameService {
 		}
 		return gboard;
 	}
-	public void startGame(){
-		List<List<CellModel>> board  = createBoard();
-		printBoard(board);
-	}
-	public void initBoard(){
+	private void initBoard(){
 		for(int row=0; row<m; row++){
 			List<CellModel> cm = new ArrayList<CellModel>();
 			for(int col=0; col<n; col++){
@@ -66,7 +62,7 @@ public class FbGameService {
 			gboard.add(cm);			
 		}		
 	}
-	public void populateRandomCell(){
+	private void populateRandomCell(){
 		while(true){
 			int i = getRandomRow();
 			int j = getRandomCol();
@@ -77,11 +73,11 @@ public class FbGameService {
 			}
 		}
 	}
-	public void populateCell(CellModel c, int newVal, boolean mStatus){
+	private void populateCell(CellModel c, int newVal, boolean mStatus){
 		c.setValue(newVal);
 		c.setMerged(mStatus);
 	}	
-	public LinkedList<CellModel> getEdges(String move){
+	private LinkedList<CellModel> getEdges(String move){
 		LinkedList<CellModel> edges = new LinkedList<CellModel>();
 		if(move.toUpperCase().equals("LEFT") || move.toUpperCase().equals("RIGHT")){
 			for(int row=0; row<m; row++){
@@ -105,16 +101,16 @@ public class FbGameService {
 		
 		return edges;
 	}
-	public void resetCell(CellModel c){
+	private void resetCell(CellModel c){
 		populateCell(c,0,false);
 	}
-	public CellModel storeAtFarthestCell(CellModel c, int value, boolean mStatus, String move){
+	private CellModel storeAtFarthestCell(CellModel c, int value, boolean mStatus, String move){
 		CellModel fCell = getFarthestCell(c,move);
 		populateCell(fCell,value,mStatus);
 //		mergedCells.add(fCell); 
 		return fCell;
 	}
-	public CellModel getFarthestCell(CellModel c, String move){
+	private CellModel getFarthestCell(CellModel c, String move){
 		CellModel fCell = null;
 		
 		//condition for valid cell: if empty || if ismerge = false
@@ -130,7 +126,7 @@ public class FbGameService {
 		}
 		return fCell;
 	}
-	public CellModel getValidLeftCell(CellModel c){
+	private CellModel getValidLeftCell(CellModel c){
 		CellModel vCell = null;
 		int tempRow = c.getRow();
 		int tempCol = 0;
@@ -147,20 +143,8 @@ public class FbGameService {
 			tempCell = gboard.get(tempRow).get(tempCol);
 		}
 		return vCell;		
-		
-//		int tempCol = 0;
-//		CellModel vCell = gboard.get(c.getRow()).get(0);
-//		while(tempCol<=c.getCol()){
-//			if(vCell.getValue() == 0 || (!vCell.isMerged() && validateFS(vCell,c) )){
-//				break;
-//			}
-//			tempCol++;
-//			vCell = gboard.get(c.getRow()).get(tempCol);
-//		}
-//		return vCell;		
-		
 	}
-	public CellModel getValidRightCell(CellModel c){
+	private CellModel getValidRightCell(CellModel c){
 		CellModel vCell = null;
 		int tempRow = c.getRow();
 		int tempCol = n-1;
@@ -178,7 +162,7 @@ public class FbGameService {
 		}
 		return vCell;
 	}
-	public CellModel getValidUpCell(CellModel c){
+	private CellModel getValidUpCell(CellModel c){
 		CellModel vCell = null;
 		int tempRow = 0;
 		int tempCol = c.getCol();
@@ -196,7 +180,7 @@ public class FbGameService {
 		}			
 		return vCell;		
 	}
-	public CellModel getValidDownCell(CellModel c){
+	private CellModel getValidDownCell(CellModel c){
 		CellModel vCell = null;
 		int tempRow = m-1;
 		int tempCol = c.getCol();
@@ -214,7 +198,7 @@ public class FbGameService {
 		}
 		return vCell;
 	}
-	public boolean isMergeState(CellModel c1, CellModel c2, String move){
+	private boolean isMergeState(CellModel c1, CellModel c2, String move){
 		boolean isCellsAdjacent = cellsAdjacent(c1,c2,move);
 		boolean isValidFS = validateFS(c1,c2);
 		boolean isAlreadyMerged = mergeValidation(c1,c2);
@@ -224,7 +208,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	public boolean cellsAdjacent(CellModel c1, CellModel c2, String move){
+	private boolean cellsAdjacent(CellModel c1, CellModel c2, String move){
 		int row_1 = c1.getRow();
 		int col_1 = c1.getCol();
 
@@ -249,7 +233,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	public boolean validateFS(CellModel c1, CellModel c2){
+	private boolean validateFS(CellModel c1, CellModel c2){
 		//FS: stands for fibonacci series
 		int value_1 = c1.getValue();
 		int value_2 = c2.getValue();
@@ -264,20 +248,20 @@ public class FbGameService {
 		}
 		return false;
 	}
-	public boolean mergeValidation(CellModel c1, CellModel c2){
+	private boolean mergeValidation(CellModel c1, CellModel c2){
 		if(c1.isMerged() || c2.isMerged()){
 			return true;
 		}
 		return false;
 	}
-	public void mergeCells(CellModel c1, CellModel c2, String move){
+	private void mergeCells(CellModel c1, CellModel c2, String move){
 		int value_1 = c1.getValue();
 		int value_2 = c2.getValue();
 		
 		int sum = value_1+value_2;
 		updateBoardAfterMerge(c1,c2,sum,move);
 	}
-	public boolean isCellsSame(CellModel fCell, CellModel c){
+	private boolean isCellsSame(CellModel fCell, CellModel c){
 		int fRow = fCell.getRow();
 		int fCol = fCell.getCol();
 		
@@ -289,7 +273,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	public void updateMergeCellList(){
+	private void updateMergeCellList(){
 		while(!mergedCells.isEmpty()){
 			int mc_row = mergedCells.get(0).getRow();
 			int mc_col = mergedCells.get(0).getCol();
@@ -299,7 +283,7 @@ public class FbGameService {
 			mergedCells.remove(0);
 		}
 	}
-	public void updateBoardAfterMerge(CellModel c1, CellModel c2, int sum, String move){
+	private void updateBoardAfterMerge(CellModel c1, CellModel c2, int sum, String move){
 		CellModel fCell = null;
 		if(move.toUpperCase().equals("LEFT")){
 			fCell = storeAtFarthestCell(c1, sum, true, move);
@@ -336,19 +320,15 @@ public class FbGameService {
 		}
 		mergedCells.add(fCell);
 	}
-	public void updateWithoutMerge(CellModel c, String move){
+	private void updateWithoutMerge(CellModel c, String move){
 		CellModel fCell = null;
 		//store at farthest cell in the direction of move
 		fCell = storeAtFarthestCell(c, c.getValue(), c.isMerged(), move);
 		if(!isCellsSame(fCell,c)){
 			resetCell(c);
 		}
-//		fCell = storeAtFarthestCell(c2, c2.getValue(), c2.isMerged(), move);
-//		if(!isCellsSame(fCell,c2)){
-//			resetCell(c2);
-//		}
 	}
-	public boolean getGameStatus() {
+	private boolean getGameStatus() {
 		for(int row=0; row<m; row++){
 			for(int col=0; col<n; col++){
 				if(gboard.get(row).get(col).getValue() == 0){
@@ -358,7 +338,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	public boolean nextMoveExist() {
+	private boolean nextMoveExist() {
 		if(!getGameStatus()) {
 			System.out.println("No Next Move Exists. GAME OVER");
 			return false;
@@ -366,6 +346,10 @@ public class FbGameService {
 			populateRandomCell();		//populate "1"	at random empty cell after every move
 			return true;
 		}
+	}
+	public void startGame(){
+		List<List<CellModel>> board  = createBoard();
+		printBoard(board);
 	}
 	public boolean moveLeft(){
 		String move = "LEFT";
