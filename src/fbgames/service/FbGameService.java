@@ -1,10 +1,12 @@
-package fbgames;
+package fbgames.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import fbgames.model.CellModel;
 
 public class FbGameService {
 

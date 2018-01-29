@@ -1,6 +1,8 @@
-package fbgames;
+package fbgames.controller;
 
 import java.util.Scanner;
+
+import fbgames.service.FbGameService;
 
 public class Controller {
 	FbGameService fs;

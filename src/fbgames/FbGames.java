@@ -3,6 +3,8 @@ package fbgames;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import fbgames.controller.Controller;
+
 
 public class FbGames {
 

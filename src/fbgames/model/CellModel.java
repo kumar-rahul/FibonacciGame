@@ -1,4 +1,4 @@
-package fbgames;
+package fbgames.model;
 
 public class CellModel {
 	
@@ -7,7 +7,7 @@ public class CellModel {
 	private boolean isMerged;
 	private int value=0;
 	
-	CellModel(int r, int c, int v, boolean mstatus){
+	public CellModel(int r, int c, int v, boolean mstatus){
 		this.row = r;
 		this.col = c;
 		this.isMerged = mstatus;
