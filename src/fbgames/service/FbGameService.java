@@ -287,26 +287,29 @@ public class FbGameService {
 		}
 	}
 	private void updateBoardAfterMerge(CellModel c1, CellModel c2, int sum, String move){
-		if(move.toUpperCase().equals("LEFT")){
-			cellsAlignment(c1, c2, sum, move);
-		}else if(move.toUpperCase().equals("RIGHT")){
-			cellsAlignment(c1, c2, sum, move);
-		}else if(move.toUpperCase().equals("UP")){
-			cellsAlignment(c1, c2, sum, move);
-		}else if(move.toUpperCase().equals("DOWN")){
-			cellsAlignment(c1, c2, sum, move);
-		}
-	}
-	private void cellsAlignment(CellModel c1,CellModel c2, int sum, String move) {
 		CellModel fCell = null;
-		fCell = storeAtFarthestCell(c2, sum, true, move);
+		if(move.toUpperCase().equals("LEFT")){
+			fCell = storeAtFarthestCell(c1, sum, true, move);
+			cellsAlignment(fCell, c1, c2);
+		}else if(move.toUpperCase().equals("RIGHT")){
+			fCell = storeAtFarthestCell(c2, sum, true, move);
+			cellsAlignment(fCell, c1, c2);
+		}else if(move.toUpperCase().equals("UP")){
+			fCell = storeAtFarthestCell(c1,sum, true, move);
+			cellsAlignment(fCell, c1, c2);
+		}else if(move.toUpperCase().equals("DOWN")){
+			fCell = storeAtFarthestCell(c2, sum, true, move);
+			cellsAlignment(fCell, c1, c2);
+		}
+		mergedCells.add(fCell);
+	}
+	private void cellsAlignment(CellModel fCell, CellModel c1,CellModel c2) {
 		if(isCellsSame(fCell,c1)){
 			resetCell(c2);
 		}else{
 			resetCell(c1);
 			resetCell(c2);			
 		}		
-		mergedCells.add(fCell);
 	}
 	public void updateWithoutMerge(CellModel c, String move){
 		CellModel fCell = null;
