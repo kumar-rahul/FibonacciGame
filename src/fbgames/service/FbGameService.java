@@ -1,7 +1,6 @@
 package fbgames.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -10,7 +9,6 @@ import fbgames.model.CellModel;
 
 public class FbGameService {
 
-//	int[][] gboard;
 	List<List<CellModel>> gboard;
 	int m,n;
 	ArrayList<CellModel> mergedCells = new ArrayList<CellModel>();
@@ -31,7 +29,11 @@ public class FbGameService {
 	public void setColCount(int col){
 		this.n = col;
 	}
-	private void printBoard(List<List<CellModel>> board){
+	
+	public void printBoard(){
+		print(gboard);
+	}
+	private void print(List<List<CellModel>> board){
 		System.out.println("Game Board: ");
 		for(int row=0; row<m; row++){
 			String bStr = "";
@@ -44,13 +46,12 @@ public class FbGameService {
 		}		
 //		System.out.println(Arrays.deepToString(board).replace("], ", "]\n"));
 	}
-	private List<List<CellModel>> createBoard(){
+	private void createBoard(){
 		gboard = new ArrayList<List<CellModel>>();//new int[m][n];		
 		initBoard();
 		for(int cell=0; cell<2; cell++){
 			populateRandomCell();
 		}
-		return gboard;
 	}
 	private void initBoard(){
 		for(int row=0; row<m; row++){
@@ -79,7 +80,7 @@ public class FbGameService {
 		c.setValue(newVal);
 		c.setMerged(mStatus);
 	}	
-	private LinkedList<CellModel> getEdges(String move){
+	public LinkedList<CellModel> getEdges(String move){
 		LinkedList<CellModel> edges = new LinkedList<CellModel>();
 		if(move.toUpperCase().equals("LEFT") || move.toUpperCase().equals("RIGHT")){
 			for(int row=0; row<m; row++){
@@ -200,7 +201,7 @@ public class FbGameService {
 		}
 		return vCell;
 	}
-	private boolean isMergeState(CellModel c1, CellModel c2, String move){
+	public boolean isMergeState(CellModel c1, CellModel c2, String move){
 		boolean isCellsAdjacent = cellsAdjacent(c1,c2,move);
 		boolean isValidFS = validateFS(c1,c2);
 		boolean isAlreadyMerged = mergeValidation(c1,c2);
@@ -256,7 +257,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	private void mergeCells(CellModel c1, CellModel c2, String move){
+	public void mergeCells(CellModel c1, CellModel c2, String move){
 		int value_1 = c1.getValue();
 		int value_2 = c2.getValue();
 		
@@ -275,7 +276,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	private void updateMergeCellList(){
+	public void updateMergeCellList(){
 		while(!mergedCells.isEmpty()){
 			int mc_row = mergedCells.get(0).getRow();
 			int mc_col = mergedCells.get(0).getCol();
@@ -322,7 +323,7 @@ public class FbGameService {
 		}
 		mergedCells.add(fCell);
 	}
-	private void updateWithoutMerge(CellModel c, String move){
+	public void updateWithoutMerge(CellModel c, String move){
 		CellModel fCell = null;
 		//store at farthest cell in the direction of move
 		fCell = storeAtFarthestCell(c, c.getValue(), c.isMerged(), move);
@@ -340,7 +341,7 @@ public class FbGameService {
 		}
 		return false;
 	}
-	private boolean nextMoveExist() {
+	public boolean nextMoveExist() {
 		if(!getGameStatus()) {
 			System.out.println("No Next Move Exists. GAME OVER");
 			return false;
@@ -350,111 +351,7 @@ public class FbGameService {
 		}
 	}
 	public void startGame(){
-		List<List<CellModel>> board  = createBoard();
-		printBoard(board);
+		createBoard();
+		printBoard();
 	}
-	public boolean moveLeft(){
-		String move = "LEFT";
-		LinkedList<CellModel> cells = getEdges(move);
-		int cellIndex;
-		for(cellIndex=0; cellIndex<cells.size()-1; cellIndex++){
-			CellModel c1 =  cells.get(cellIndex);
-			CellModel c2 =  cells.get(cellIndex+1);
-
-			if(isMergeState(c1,c2,move)){
-				mergeCells(c1,c2,move);
-				cellIndex++;
-			}else{
-				updateWithoutMerge(c1,move);
-			}
-		}
-		if(cellIndex==cells.size()-1){
-			CellModel c1 =  cells.get(cells.size()-1);
-			updateWithoutMerge(c1,move);
-		}
-
-		updateMergeCellList();
-		boolean isNextMove = nextMoveExist();
-		printBoard(gboard);
-		return isNextMove;
-	}
-	public boolean moveRight(){
-		String move = "RIGHT";
-		LinkedList<CellModel> cells = getEdges(move);
-		int cellIndex;		
-		for(cellIndex=cells.size()-1; cellIndex>0; cellIndex--){
-			CellModel c1 =  cells.get(cellIndex);
-			CellModel c2 =  cells.get(cellIndex-1);
-
-			if(isMergeState(c1,c2,move)){
-				mergeCells(c1,c2,move);
-				cellIndex--;
-			}else{
-				updateWithoutMerge(c1,move);
-			}
-		}
-		if(cellIndex==0){
-			CellModel c1 =  cells.get(0);
-			updateWithoutMerge(c1,move);
-		}
-
-		updateMergeCellList();		
-		boolean isNextMove = nextMoveExist();
-		printBoard(gboard);
-		return isNextMove;
-		
-	}
-	public boolean moveUp(){
-		String move = "UP";
-		LinkedList<CellModel> cells = getEdges(move);
-		int cellIndex;		
-		for(cellIndex=0; cellIndex<cells.size()-1; cellIndex++){
-			CellModel c1 =  cells.get(cellIndex);
-			CellModel c2 =  cells.get(cellIndex+1);
-
-			if(isMergeState(c1,c2,move)){
-				mergeCells(c1,c2,move);
-				cellIndex++;
-			}else{
-				updateWithoutMerge(c1,move);
-			}
-		}
-		if(cellIndex==cells.size()-1){
-			CellModel c1 =  cells.get(cells.size()-1);
-			updateWithoutMerge(c1,move);
-		}
-		
-		updateMergeCellList();		
-		boolean isNextMove = nextMoveExist();
-		printBoard(gboard);
-		return isNextMove;
-	}
-	public boolean moveDown(){
-		String move = "DOWN";
-		LinkedList<CellModel> cells = getEdges(move);
-		int cellIndex;		
-		
-		for(cellIndex=cells.size()-1; cellIndex>0; cellIndex--){
-			CellModel c1 =  cells.get(cellIndex);
-			CellModel c2 =  cells.get(cellIndex-1);
-
-			if(isMergeState(c1,c2,move)){
-				mergeCells(c1,c2,move);
-				cellIndex--;
-			}else{
-				updateWithoutMerge(c1,move);
-			}
-		}
-		if(cellIndex==0){
-			CellModel c1 =  cells.get(0);
-			updateWithoutMerge(c1,move);
-		}
-
-		updateMergeCellList();
-		boolean isNextMove = nextMoveExist();
-		printBoard(gboard);
-		return isNextMove;
-	}
-
-	
 }
